@@ -25,6 +25,12 @@ const ShowCookieValue = () => {
   return <div>ShowCookieValue: <button onClick={() => setState(state + 1)}>incr ({state})</button> {JSON.stringify(store.cookie)}</div>
 }
 
+const NestedShowCookieValue = () => {
+  const [state, setState] = React.useState(false);
+
+  return <div>NestedShowCookieValue: <button onClick={() => setState(!state)}>toggle</button> {state && <ShowCookieValue/>}</div>
+}
+
 function App() {
   const cookieValue = { value: Math.floor(Math.random() * 10000).toString(36) }
   const cookieFn = async () => cookieValue;
@@ -33,6 +39,7 @@ function App() {
       <CookieContextProvider getCookieValue={cookieFn}>
         ok
         <ShowCookieValue/>
+        <NestedShowCookieValue/>
       </CookieContextProvider>
     </div>
   );

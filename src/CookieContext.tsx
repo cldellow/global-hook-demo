@@ -20,3 +20,5 @@ export const CookieContextProvider = (
     {props.children}
   </CookieContext.Provider>
 }
+
+export const useCookieContext = () => React.useContext(CookieContext);
