@@ -50,9 +50,9 @@ const EnsureInitialized = (props: React.PropsWithChildren<unknown>) => {
       console.log(`! cleanup`);
     }
   }, [
-    // actions,
-    // store.initialized,
-    // getCookieValue
+    actions,
+    store.initialized,
+    getCookieValue
   ]);
 
   if (!store.initialized)
