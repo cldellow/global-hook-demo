@@ -1,6 +1,6 @@
 import React from 'react';
 import globalHook, { Store as GlobalStore } from 'use-global-hook';
-import { Cookie, useCookieContext } from './CookieContext';
+import { Cookie }  from './CookieContext';
 
 interface UndefinedState {
   state: 'undefined';
@@ -18,47 +18,23 @@ interface LoadedState {
 export type CookieState = UndefinedState | LoadingState | LoadedState;
 
 export interface GlobalState {
+  initialized: boolean;
   cookie: CookieState;
 }
 
 const initialState: GlobalState = {
+  initialized: false,
   cookie: { state: 'undefined' }
 }
 
 export type Store = GlobalStore<GlobalState, GlobalActions>;
 
 export interface GlobalActions {
+  initialize: (getCookieValue: () => Promise<Cookie>) => Promise<void>,
 }
 
-const actions: GlobalActions = {}
-
-let count = 0;
-
-const getCookieValue = async () => {
-  await new Promise(f => setTimeout(f, 1000));
-
-  return 'non-pluggable value ☹️';
-}
-
-const initializer = async (store: Store) => {
-  console.log(`! initializer running ${count}`);
-  count++;
-  store.setState({
-    ...store.state,
-    cookie: { state: 'loading' }
-  });
-
-  // TODO: how to make this pluggable?
-  const cookieValue = await getCookieValue();
-  store.setState({
-    ...store.state,
-    cookie: { state: 'loaded', value: cookieValue }
-  });
-}
-
-const mkInitializer = (getCookieValue: () => Promise<Cookie>) => {
-  console.log(`! mkInitializer running`);
-  async function f(store: Store) {
+const actions = {
+  initialize: async (store: Store, getCookieValue: () => Promise<Cookie>) => {
     console.log(`! initializer running ${count}`);
     count++;
     store.setState({
@@ -69,11 +45,17 @@ const mkInitializer = (getCookieValue: () => Promise<Cookie>) => {
     const cookieValue = await getCookieValue();
     store.setState({
       ...store.state,
+      initialized: true,
       cookie: { state: 'loaded', value: cookieValue.value }
     });
-  }
 
-  return f;
+  }
+}
+
+let count = 0;
+
+const initializer = async (store: Store) => {
+  console.log(`! initializer is a no-op`);
 }
 
 type GlobalVals = [GlobalState, GlobalActions];

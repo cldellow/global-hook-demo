@@ -15,6 +15,7 @@ export const CookieContext = createContext<CookieContextType | undefined>(
 export const CookieContextProvider = (
   props: React.PropsWithChildren<CookieContextType>
 ) => {
+  console.log(`! CookieContext render`);
   return <CookieContext.Provider
     value={props}>
     {props.children}
